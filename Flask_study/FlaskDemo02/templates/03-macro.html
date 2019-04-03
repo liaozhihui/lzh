@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .red{
+            background:red;
+        }
+        .orange{
+            background:orange;
+        }
+
+    </style>
+</head>
+<body>
+    {%macro showP(str)%}
+        <h1 style="background: orangered;color: #333">{{str}}</h1>
+    {%endmacro%}
+    <div class="container">{{showP("hello world")}}</div>
+
+    {%import 'macros.html' as macros%}
+    {{macros.show_msg('测试的宏')}}
+
+    {%import 'macros_exer.html' as macros1%}
+    {{macros1.showList(list)}}
+
+</body>
+</html>

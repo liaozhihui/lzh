@@ -1,0 +1,14 @@
+{%macro showList(li)%}
+
+    {% for n in li%}
+        <ul>
+        <li
+        {%if loop.index%2==0 %}
+            class="red"
+        {%else%}
+           class="orange"
+        {%endif%}
+        >{{n}}</li>
+            </ul>
+    {%endfor%}
+{%endmacro%}
