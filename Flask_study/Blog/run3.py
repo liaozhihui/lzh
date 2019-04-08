@@ -1,7 +1,19 @@
 # coding=utf-8
 from flask import Flask,render_template,request
 import os,datetime
+from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager
+from flask_migrate import Migrate,MigrateCommand
+import pymysql
+pymysql.install_as_MySQLdb()
 app=Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:123456@localhost:3306/blog"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+app.config['DEGUB'] = True
+db = SQLAlchemy(app)
+
+manager=Manager(app)
 
 @app.route("/")
 def index():
@@ -60,7 +72,17 @@ def realse():
             files.save(upload_path)
         return str(locals())
 
-
+class Users(db.Model):
+    __tablename__='users'
+    id=db.Column(db.Integer,primary_key=True)
+    username=db.Column(db.String(30),unique=True,nullable=False)
+    email = db.Column(db.String(120),unique=True,nullable=False)
+    url =db.Column(db.String(120),nullable=True)
+    password=db.Column(db.String(100),nullable=False)
 
 if __name__=="__main__":
-    app.run(debug=True,host='0.0.0.0')
+    # app.run(debug=True,host='0.0.0.0')
+    migrate=Migrate(app,db)
+    manager.add_command('db', MigrateCommand)
+    manager.run()
+
