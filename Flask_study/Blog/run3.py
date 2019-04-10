@@ -10,7 +10,7 @@ app=Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:123456@localhost:3306/blog"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-app.config['DEGUB'] = True
+app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 
 manager=Manager(app)
@@ -23,14 +23,14 @@ def index():
 def list():
     return render_template('index_.html')
 
-@app.route('/login',methods=["GET","POST"])
-def login():
-    if request.method =="GET":
-        return render_template('login.html')
-    else:
-        username=request.form.get("username")
-        password=request.form.get("password")
-        return str(locals())
+# @app.route('/login',methods=["GET","POST"])
+# def login():
+#     if request.method =="GET":
+#         return render_template('login.html')
+#     else:
+#         username=request.form.get("username")
+#         password=request.form.get("password")
+#         return str(locals())
 @app.route('/register',methods=["GET","POST"])
 def register():
     if request.method =="GET":
@@ -74,11 +74,36 @@ def realse():
 
 class Users(db.Model):
     __tablename__='users'
-    id=db.Column(db.Integer,primary_key=True)
+    id=db.Column(db.Integer,primary_key=True,autoincrement=True)
     username=db.Column(db.String(30),unique=True,nullable=False)
     email = db.Column(db.String(120),unique=True,nullable=False)
     url =db.Column(db.String(120),nullable=True)
     password=db.Column(db.String(100),nullable=False)
+
+@app.route('/add')
+def add():
+    user=Users()
+
+    user.username='wangdangbo'
+    user.email='wangdangbo@163.com'
+    user.url='db.com'
+    user.password='666666'
+    db.session.add(user)
+    db.session.commit()
+    return '插入成功'
+
+@app.route('/login',methods=['GET','POST'])
+def login_view():
+    if request.method == "GET":
+        return render_template('login.html')
+    else:
+        username=request.form['username']
+        password=request.form['password']
+        user=db.session.query(Users).filter(Users.username==username,Users.password==password).first()
+        if user:
+            return "<script>alert('登录成功')</script>"
+        else:
+            return "<script>alert('登录失败');location.href='/login';</script>"
 
 if __name__=="__main__":
     # app.run(debug=True,host='0.0.0.0')
