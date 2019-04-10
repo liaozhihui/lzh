@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+</head>
+<body>
+<form action="/register" method="post">
+<p>姓名:<input type="text" name="sname"></p>
+<p>年龄:<input type="text" name="sage"></p>
+<p>课程:
+    <select name="cid">
+        {%for course in courses%}
+        <option value="{{course.id}}">{{course.cname}}</option>
+        {%endfor%}
+    </select>
+</p>
+    <p>是否激活:<input type="checkbox" name="isActive"></p>
+<p><input type="submit" value="注册"></p>
+    </form>
+</body>
+</html>

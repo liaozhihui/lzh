@@ -24,8 +24,8 @@
             <td>{{user.age}}</td>
             <td>{{user.email}}</td>
             <td>
-                <a href="#">删除</a>
-                <a href="#">修改</a>
+                <a href="/delete?id={{user.id}}&search={{sea}}">删除</a>
+                <a href="/modify?id={{user.id}}&search={{sea}}">修改</a>
             </td>
     </tr>
             {%endfor%}

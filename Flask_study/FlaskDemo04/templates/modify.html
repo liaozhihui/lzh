@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/modify" method="post">
+    <input type="hidden" name='id' value="{{user.id}}">
+    <input type="hidden" name='search' value="{{sea}}">
+    <p>姓名：<input type="text" value="{{user.username}}" name="username"></p>
+<p>年龄：<input type="text" value="{{user.age}}" name="age"></p>
+<p>邮箱：<input type="text" value="{{user.email}}" name="email"></p>
+<p>是否启动：<input type="checkbox" name="isActive"
+    {%if user.isActive%}
+               checked
+    {%endif%}>
+
+    </p>
+<p><input type="submit" value="修改"></p>
+</form>
+</body>
+</html>

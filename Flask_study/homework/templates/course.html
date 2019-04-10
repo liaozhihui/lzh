@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>课程选择</title>
+</head>
+<script>
+
+    window.onload=function () {
+       var one= document.getElementById("select")
+       var child = one.children
+        for(var i=0;i<child.length;i++){
+           if(child[i].value=={{sel}}){
+               child[i].setAttribute('selected',1)
+            }
+        }
+           one.onchange=function (){
+            location.href='/select?course='+this.value
+        }
+    }
+</script>
+<body>
+<p>课程选择:<select name="course" id="select">
+        <option value="0">请选择</option>
+     {%for course in courses%}
+        <option value="{{course.id}}">{{course.cname}}</option>
+        {%endfor%}
+</select>
+    <table width="600" border="1" cellspacing="0">
+    <tr>
+        <th>老师姓名</th>
+         <th>老师年龄</th>
+         <th>教授课程</th>
+    </tr>
+    {%for teacher in teachers%}
+        <tr>
+        <td>{{teacher.sname}}</td>
+    <td>{{teacher.sage}}</td>
+    <td>
+        {%for course in courses%}
+            {%if course.id==teacher.cid%}
+                {{course.cname}}
+            {%endif%}
+        {%endfor%}
+         </td></tr>
+    {%endfor%}
+</table>
+</p>
+</body>
+</html>

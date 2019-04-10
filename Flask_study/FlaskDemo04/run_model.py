@@ -1,9 +1,9 @@
 # coding=utf-8
-from flask import Flask,request,render_template
+from flask import Flask,request,render_template,redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate,MigrateCommand
-from sqlalchemy import or_
+from sqlalchemy import or_,func
 import math
 #导入pymysql并且将其伪装成MySQLdb
 import pymysql
@@ -51,11 +51,16 @@ class Teacher(db.Model):
     sname=db.Column(db.String(30),nullable=False)
     sage=db.Column(db.Integer,nullable=False)
     isActive=db.Column(db.Boolean,default=True,nullable=False)
+    #增加外键列,要引用自course表的主键id
+    cid = db.Column(db.Integer,db.ForeignKey('course.id'))
+
 
 class Course(db.Model):
     __tablename__="course"
     id=db.Column(db.Integer,primary_key=True,autoincrement=True)
     cname=db.Column(db.String(30),nullable=False,unique=True,index=True)
+    #准备增加关联属性和反向引用关系属性,backref是插入Teacher中
+    teachers=db.relationship("Teacher",backref="course",lazy="dynamic")
 
 
 # db.drop_all()
@@ -129,7 +134,7 @@ def queryall_view():
     # print(query)
     # print("类型为：",type(query))
     search = request.args.get('search','')
-    pageSize=3
+    pageSize=15
     totalPageSize=db.session.query(Users).filter(or_(Users.username.like('%'+search+'%'),
                        Users.email.like('%' + search + '%'))).count()
     print(totalPageSize)
@@ -192,6 +197,95 @@ def page_view():
                            prevPage=prevPage,nextPage=nextPage)
     pass
 
+@app.route('/06-aggregate')
+def aggragate_view():
+    # result=db.session.query(func.sum(Users.age)).all()
+    #查询Users实体类中所有人的平均年龄，年龄总和，最大年龄和最小年龄分别都是多少
+    # result=db.session.query(func.avg(Users.age),func.sum(Users.age),func.max(Users.age)).all()
+    result = db.session.query(Users.isActive,func.avg(Users.age).group_by('isActive')).having(func.avg(Users.age)>=18).all
+    print(result)
+    return "聚合查询成功"
+@app.route('/07-aggregate-exer')
+def aggregate_exer():
+    #查询Users中的总年龄
+    db.session.query(func.sum(Users.age)).all()
+    #查询User实体中年龄大于18岁的人的平均年龄是多少
+    db.session.query(func.avg(Users.age)).filter(Users.age>18).all()
+    #查询Users实体中总人数是多少
+    db.session.query(func.count(Users.id)).all()
+    #查询Users实体中按isActive分组后，组内人数大于2人的组的信息(组，人数)
+    db.session.query(Users.isActive,func.count('*')).group_by('isActive').having(func.count('*')>2)
+    #查询Users实体中年龄大于18岁的人按isActive分组后，组内人数大于2恩的组的信息（组,人数）
+    db.session.query(Users.isActive, func.count('*')).filter(Users.age>18).group_by('isActive').having(func.count('*') > 2)
+
+@app.route('/delete')
+def delete_view():
+    id=request.args['id']
+    search = request.args.get('search', '')
+    print(id)
+    user=Users.query.filter_by(id=id).first()
+    db.session.delete(user)
+    return redirect('/queryall?search=%s' % search)
+    # return "<script>alert('删除成功');location.href='/queryall?search=%s'</script>"%search
+@app.route('/modify',methods=['POST','GET'])
+def modify_view():
+
+    if request.method=="GET":
+        id = request.args['id']
+        search = request.args.get('search', '')
+        user = Users.query.filter_by(id=id).first()
+        return render_template('modify.html',user=user,sea=search)
+    else:
+        id = request.form['id']
+        search = request.form.get('search', '')
+        user = Users.query.filter_by(id=id).first()
+        user.username = request.form['username']
+        user.email = request.form['email']
+        user.age = request.form['age']
+        user.isActive = False
+        if 'isActive' in request.form:
+            user.isActive = True
+        db.session.add(user)
+        return redirect('/queryall?search=%s'%search)
+        # return "<script>alert('修改成功');location.href='/queryall?search=%s'</script>"%search
+
+
+@app.route('/10-regtea')
+def regtea_views():
+    #方案1：声明一个Teacher对象，通过外键属性来关联对应的course的id值
+    # tea=Teacher()
+    # tea.sname="小红"
+    # tea.sage=18
+    # tea.cid=2
+    # db.session.add(tea)
+
+    #方案2：声明一个Teacher对象，通过course属性来关联对应的course
+    tea=Teacher()
+    tea.sname='老魏Maria'
+    tea.sage=47
+    #获取id为1的课程信息
+    course=Course.query.filter_by(id=1).first()
+    #将course对象的与tea对象关联
+    tea.course=course
+    db.session.add(tea)
+    return "注册teacher成功"
+@app.route('/11-query')
+def query11_views():
+    #1、查询lzmaria老师的个人信息以及所教授的课程
+    tea=Teacher.query.filter_by(sname='lzmaria').first()
+    print("姓名：%s,年龄:%d"%(tea.sname,tea.sage))
+    print("所教课程:%s"%tea.course.cname)
+    #查询python所对应的所有的老师的信息
+    course=Course.query.filter_by(cname='python').first()
+    print("课程名称:%s"%course.cname)
+    #通过course中的关联属性teachers来获取对应的所有的老师的信息
+
+
+    #course.teachers表示的是course所对应的teachers的一个查询对象(AppenderBaseQuery类型，属于BaseQuery的一个子类)
+    print(type(course.teachers))
+    teachers = course.teachers.all()
+    print(teachers)
+    return "查询陈宫"
 if __name__=="__main__":
     #将使用manager来启动程序
     # manager.run()
