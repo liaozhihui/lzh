@@ -35,6 +35,7 @@ class Users(db.Model):
     age = db.Column(db.Integer, nullable=True)
     email = db.Column(db.String(120), unique=True)
     isActive = db.Column(db.Boolean,default=True)
+    wife=db.relationship('Wife',backref='user',uselist=False)
     def __repr__(self):
         return "<User:%r>"%self.username
 
@@ -53,7 +54,21 @@ class Teacher(db.Model):
     isActive=db.Column(db.Boolean,default=True,nullable=False)
     #增加外键列,要引用自course表的主键id
     cid = db.Column(db.Integer,db.ForeignKey('course.id'))
+    students=db.relationship("Student",lazy='dynamic',secondary='student_teacher'
+                             ,backref=db.backref('teachers',lazy="dynamic"))
 
+class Student_teacher(db.Model):
+    __tablename__='student_teacher'
+    id=db.Column(db.Integer,primary_key=True)
+    student_id=db.Column(db.Integer,db.ForeignKey("student.id"))
+    teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"))
+
+
+class Wife(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    wname=db.Column(db.String(30))
+    #增加外检约束和唯一约束
+    uid=db.Column(db.Integer,db.ForeignKey('users.id'),unique=True)
 
 class Course(db.Model):
     __tablename__="course"
@@ -61,7 +76,22 @@ class Course(db.Model):
     cname=db.Column(db.String(30),nullable=False,unique=True,index=True)
     #准备增加关联属性和反向引用关系属性,backref是插入Teacher中
     teachers=db.relationship("Teacher",backref="course",lazy="dynamic")
+    #增加关联属性与反向引用关联属性（Course与Student之间的多对多）
+    students=db.relationship('Student',lazy='dynamic',#lazy针对Course类中的students属性的延迟加载
+                             backref=db.backref("courses",lazy='dynamic')#lazy针对Student类中的courses属性的延迟加载
+                             ,secondary="student_course") #指定第三张关联表
 
+
+
+#编写StudentCourse类，表示的是Student与Course之间的关联类(表)
+#表名:student_course
+class StudentCourse(db.Model):
+    __tablename__='student_course'
+    id = db.Column(db.Integer,primary_key=True)
+    #外键:student_id,引用自student表的主键id
+    student_id=db.Column(db.Integer,db.ForeignKey('student.id'))
+    #外键course_id,引用自course表的主键id
+    course_id=db.Column(db.Integer,db.ForeignKey('course.id'))
 
 # db.drop_all()
 # #通过db.create_all()将User类映射到数据库上
@@ -286,6 +316,113 @@ def query11_views():
     teachers = course.teachers.all()
     print(teachers)
     return "查询陈宫"
+@app.route('/12-regteacher',methods=['GET','POST'])
+
+def regteacher():
+    if request.method=='GET':
+        courses=Course.query.all()
+        return render_template('12-regteacher.html',courses=courses)
+    else:
+        tname=request.form['tname']
+        tage=request.form['tage']
+        cid=request.form['cid']
+        tea=Teacher()
+        tea.sname=tname
+        tea.sage=tage
+        db.session.add(tea)
+        return "注册成功"
+@app.route('/13-queryteacher')
+
+def queryteacher():
+    courses=Course.query.all()
+    cid=request.args.get('cid','0')
+    if cid=='0':
+        teachers=Teacher.query.all()
+
+        pass
+    else:
+        teachers=Course.query.filter_by(id=cid).first().teachers.all()
+    return render_template('13-queryteacher.html',courses=courses,teachers=teachers)
+    return "注册成功"
+@app.route('/14-oto')
+def oto_views():
+    # wife=Wife()
+    # wife.wname='Maira夫人'
+    # wife.uid=1
+    # db.session.add(wife)
+    wife=Wife.query.filter_by(id=1).first()
+    user=wife.user
+    print('wife:',wife.wname)
+    print('user:',user.username)
+
+    return "查询wife成功"
+@app.route('/15-wiferegister',methods=['GET','POST'])
+def wiferegister():
+    users = Users.query.all()
+    if request.method=='GET':
+        users=Users.query.all()
+        return render_template('wiferegister.html',users=users)
+    else:
+        wifes=Wife.query.all()
+        # usersList=[wife.user for wife in wifes]
+
+        wname=request.form['wname']
+        userid=int(request.form['wuser'])
+        user=Wife.query.filter_by(id=userid).first()
+        if not user:
+            wife = Wife()
+            wife.wname=wname
+            wife.user=user
+            db.session.add(wife)
+            return redirect('/showWife')
+        else:
+            return "<script>alert('注册失败');location.href='/15-wiferegister'</script>"
+
+@app.route('/showWife')
+def showWife():
+    wifes=Wife.query.all()
+    return render_template('showWife.html',wifes=wifes)
+@app.route("/16-mtm")
+def mtm_views():
+    #向第三张表中插入关联数据
+    #演示：如何将student对象和course对象关联到一起
+    #语法：关联属性/反向引用关系属性 都提供了一个方法append() 用户关联两张表中的数据到第三表中
+    #查询Tom的信息，
+    stu=Student.query.filter_by(sname='Tom').first()
+    # 查询python的课程信息
+    cou=Course.query.filter_by(cname='python').first()
+    #方案一：通过stu属性courses将cou关联
+    stu.courses.append(cou)
+    #方案二：通过cou属性students将stu关联
+    return "插入关联数据成功"
+
+@app.route("/17-mtm-query")
+def mtmquery_views():
+    #查询 id 为1的course的信息
+    course=Course.query.filter_by(id=1).first()
+    #再查询course对应的student列表
+    students=course.students.all()
+    for stu in students:
+        print("学员的姓名:"+stu.sname)
+    return "数据查询成功"
+
+@app.route('/studentregister',methods=["POST","GET"])
+def regstudent():
+    if request.method=="GET":
+        courses=Course.query.all()
+        return render_template("studentregister.html",courses=courses)
+    else:
+        student=Student()
+        student.sname=request.form['sname']
+        student.sage = request.form['sage']
+        courseList=request.form.getlist('courses')
+
+        list=Course.query.filter(Course.id.in_(courseList)).all()
+        db.session.add(student)
+        db.session.commit()
+        for course in list:
+            student.courses.append(course)
+        return "注册成功"
 if __name__=="__main__":
     #将使用manager来启动程序
     # manager.run()

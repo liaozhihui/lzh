@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        window.onload=function () {
+            document.getElementById('selCourse')
+                .onchange = function () {
+                location.href='/13-queryteacher?cid='+this.value
+                alert(location.href)
+            }
+        }
+    </script>
+</head>
+<body>
+    <p>
+        课程:
+        <select id="selCourse">
+            <option value="0">>===请选择===<</option>
+            {%for course in courses%}
+                <option value="{{course.id}}">{{course.cname}}</option>
+            {%endfor%}
+        </select>
+    </p>
+    <table width="400" border="1" cellspacing="0">
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>课程</th>
+        </tr>
+        {%for tea in teachers%}
+            <tr>
+                <td>{{tea.tname}}</td>
+                  <td>{{tea.tage}}</td>
+                  <td>{{tea.course.cname}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+</body>
+</html>

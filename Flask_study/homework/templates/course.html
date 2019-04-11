@@ -9,11 +9,11 @@
     window.onload=function () {
        var one= document.getElementById("select")
        var child = one.children
-        for(var i=0;i<child.length;i++){
-           if(child[i].value=={{sel}}){
-               child[i].setAttribute('selected',1)
-            }
-        }
+//        for(var i=0;i<child.length;i++){
+//           if(child[i].value=={{sel}}){
+//               child[i].setAttribute('selected',1)
+//            }
+//        }
            one.onchange=function (){
             location.href='/select?course='+this.value
         }
@@ -23,7 +23,11 @@
 <p>课程选择:<select name="course" id="select">
         <option value="0">请选择</option>
      {%for course in courses%}
-        <option value="{{course.id}}">{{course.cname}}</option>
+        <option value="{{course.id}}"
+            {%if sel==course.id%}
+                selected
+                {%endif%}
+        >{{course.cname}}</option>
         {%endfor%}
 </select>
     <table width="600" border="1" cellspacing="0">
@@ -36,12 +40,9 @@
         <tr>
         <td>{{teacher.sname}}</td>
     <td>{{teacher.sage}}</td>
+
     <td>
-        {%for course in courses%}
-            {%if course.id==teacher.cid%}
-                {{course.cname}}
-            {%endif%}
-        {%endfor%}
+        {{teacher.course.cname}}
          </td></tr>
     {%endfor%}
 </table>
