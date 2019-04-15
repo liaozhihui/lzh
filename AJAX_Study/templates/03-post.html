@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        function btnSend() {
+            //获取 xhr
+            var xhr=createXhr()
+            //创建请求
+            xhr.open('post','03-server02',true);
+            //设置回调函数
+            xhr.onreadystatechange=function () {
+                if(xhr.readyState==4&&xhr.status==200){
+                    $("#show").html(xhr.responseText)
+                }
+
+            };
+            //设置Content-Type请求头
+            xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            //发送请求
+            var uname=$("[name='uname']").val();
+            var upwd= $("[name=upwd]").val();
+            xhr.send("uname="+uname+"&upwd="+upwd);
+
+        }
+    </script>
+</head>
+<body>
+<form action="/03-server01" method="post">
+    <p>用户名称：<input type="text" name="uname"></p>
+    <p>用户密码：<input type="password" name="upwd"></p>
+    <p><input type="submit" value="注册(非Ajax)">
+    <input type="button" value="注册(Ajax)" onclick="btnSend()"></p>
+</form>
+<div id="show"></div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<form action="/reUser" method="post">
+    <p>姓名<input type="text" name="uname"></p>
+    <p>密码<input type="password" name="upwd"></p>
+<p>号码<input type="text" name="uphone" onblur="checkPhone()" id="uphone"><span id="uphone-show"></span></p>
+<p>邮件<input type="email" name="uemail"></p>
+<p><input type="submit" value="注册"></p>
+</form>
+<script src="/static/js/common.js"></script>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        function checkPhone() {
+            //创建xhr
+            var xhr=createXhr();
+            //创建请求
+            xhr.open('get','02-myserver?uphone='+$('#uphone').val(),true)
+            //设置回调函数
+            xhr.onreadystatechange=function () {
+                if(xhr.readyState==4 && xhr.status==200){
+                    var value=xhr.responseText
+                    if (value=='1'){
+                        $('#uphone-show').html("号码已存在")
+                        $("[type=submit]").attr('disabled',true)
+                    }else{
+                        $('#uphone-show').html(value)
+                        $("[type=submit]").attr('disabled',false)
+                    }
+
+
+
+
+                }
+            }
+            //发送请求
+            xhr.send(null)
+        }
+    </script>
+</body>
+
+</html>

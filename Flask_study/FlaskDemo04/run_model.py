@@ -163,15 +163,16 @@ def queryall_view():
     # query=db.session.query(Users)
     # print(query)
     # print("类型为：",type(query))
+    print(request.args.get('id',-5))
     search = request.args.get('search','')
     pageSize=15
     totalPageSize=db.session.query(Users).filter(or_(Users.username.like('%'+search+'%'),
                        Users.email.like('%' + search + '%'))).count()
-    print(totalPageSize)
+
     lastPage = math.ceil(totalPageSize/pageSize)
-    print(lastPage)
+
     page=int(request.args.get('page','1'))
-    print(page)
+
     prevPage=1
     if page>1:
         prevPage=page-1

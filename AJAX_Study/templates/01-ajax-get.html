@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <button onclick="btnAjax()">发送(Ajax)</button>
+    <a href="/01-server">发送(非AJAX)</a>
+    <div id = show>
+
+    </div>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        function btnAjax() {
+            //1、获取xhr对象
+                var xhr=createXhr();
+            //2、创建请求
+                xhr.open('get','01-server',true);
+            //3、设置回调函数
+                xhr.onreadystatechange=function () {
+                    //判断readyState以及status的值
+                     if(xhr.readyState==4 && xhr.status==200){
+        //可以接收响应数据
+                         var resT=xhr.responseText;
+                         $("#show").html(resT)
+                     }
+                }
+            //4、发送请求
+            xhr.send(null)
+        }
+    </script>
+</body>
+</html>
