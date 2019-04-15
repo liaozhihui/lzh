@@ -35,3 +35,26 @@ rf=RandomForestClassifier(n_estimators=10,max_depth=3,random_state=SEED)
 rf.fit(xtrain,ytrain)
 p=rf.predict_proba(xtest)[:,1]
 score=roc_auc_score(ytest,p)
+
+from sklearn.svm import SVC,LinearSVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier,GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.kernel_approximation import Nystroem,RBFSampler
+from sklearn.pipeline import make_pipeline
+
+def get_models():
+    nb=GaussianNB()
+    svc=SVC(C=100,random_state=SEED)
+    knn=KNeighborsClassifier(n_neighbors=3)
+    lr=LogisticRegression(C=100,random_state=SEED)
+    nn=MLPClassifier((100,10),early_stopping=False,random_state=SEED)
+    gb=GradientBoostingClassifier(n_estimators=100,random_state=SEED)
+    rf=RandomForestClassifier(n_estimators=10,max_features=3,random_state=SEED)
+    models={'svm':svc,'knn':knn,'navie_bayes':nb,'mlp-nn':nn,'random_forest':rf,'gbm':gb,'logistic',lr}
+    return models
+
+def train_predic(model_list):
+    pass
