@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+            $("#btnShow").click(function () {
+                /**
+                 * $.get(url[,data][,callback][,type])
+                 * url:要请求的远程地址
+                 * data：要传递的参数（可省）
+                 * 格式1：name=value&name2=value2
+                 * 格式2：{name1:"value",name2:"value2"}
+                 * callback:请求响应成功后的回调函数(可省)
+                 * function(data){data表示响应回来的数据}
+                 * type:制定响应回来的数据的结构类型(可省)
+                 * xml、html、script、json
+                 * _default:默认值
+                 */
+                var params="uname="+$("#uname").val();
+                $.get("/08-server",params,function (data) {
+                    console.log(data)
+                    console.log("data的数据类型："+typeof(data))
+                    if (data.errMsg){
+                        alert(data.errMsg)
+                    }else{
+                    $("#show-id").html(data.id)
+                    $("#show-uphone").html(data.uphone)
+                    $("#show-uname").html(data.uname)
+                    $("#show-upwd").html(data.upwd)
+                    $("#show-uemail").html(data.uemail)
+                        }
+                },"json")
+            })
+        })
+    </script>
+</head>
+<body>
+<p>
+<input type="text" id="uname">
+<button id="btnShow">显示</button>
+</p>
+<p>ID:<span id="show-id"></span></p>
+<p>UPHONE:<span id="show-uphone"></span></p>
+<p>UNAME:<span id="show-uname"></span></p>
+<p>UPWD:<span id="show-upwd"></span></p>
+<p>UEMAIL:<span id="show-uemail"></span></p>
+</body>
+</html>

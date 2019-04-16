@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        function loadPro() {
+            //创建xhr
+            var xhr = createXhr()
+            //创建请求
+            xhr.open('get','/06-getPro',false);
+            //设置回调函数
+            xhr.onreadystatechange=function () {
+                if(xhr.status==200&&xhr.readyState==4){
+                    var pros=JSON.parse(xhr.responseText)
+                    var html=""
+                    for(var i=0;i<pros.length;i++){
+                        var pro=pros[i]
+                        html+="<option value='"+pro.id+"'>"
+                        html+=pro.pname
+                        html+="</option>"
+                    }
+                    $("#selPro").html(html)
+                }
+            }
+            //发送请求
+            xhr.send(null)
+            return $("#selPro").val()
+        }
+
+        function loadCity(val) {
+            hrx = createXhr()
+            hrx.open("post", '/06-getCity',true)
+
+            hrx.onreadystatechange = function () {
+                if (hrx.status == 200 && hrx.readyState == 4) {
+                    var citys = JSON.parse(hrx.responseText)
+                    var html = ""
+                    for (var i = 0; i < citys.length; i++) {
+                        var city = citys[i]
+                        html += "<option value='" + city.id + "'>"
+                        html += city.cname
+                        html += "</option>"
+                    }
+                    $("#selCity").html(html)
+                }
+
+            }
+            hrx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            hrx.send("pid=" + val)
+        }
+            $(function () {
+                loadPro()
+                loadCity($("#selPro").val())
+                $("#selPro").change(function () { loadCity($(this).val())})
+            })
+
+    </script>
+</head>
+<body>
+    <select id="selPro"></select>
+    <select id="selCity"></select>
+</body>
+</html>

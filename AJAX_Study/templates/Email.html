@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        input{
+            width:500px;
+        }
+        #show{
+            width:500px;
+            color:gray;
+            font-size:15px;
+            font-family: "futura", arial;
+
+        }
+    </style>
+     <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+
+            $("#email")[0].oninput=function () {
+                params="email="+$("#email").val()
+                $.get("/09-homework",params,function (data) {
+
+                    if(data==0){
+                         $("#show").hide()
+                    }else{
+                         $("#show").show()
+                       html=""
+                    for(var i=0;i<data.length;i++){
+                         html+="<p>"+data[i][0]+"</p>"
+
+                    }
+                    $("#show").html(html)
+                    }
+
+
+                },"json")
+            }
+        })
+    </script>
+</head>
+<body>
+    <p>邮箱搜索：
+        <div>
+        <input type="text" id="email" name="email">
+        <div id="show"></div>
+    </div>
+
+    </p>
+
+</body>
+</html>
