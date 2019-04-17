@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+            $('#btnAjax').click(function () {
+                $.ajax({
+                    url:'/10-server',
+                    type:'get',
+                    dataType:"json",
+                    success:function (data) {
+                        for(var i=0;i<data.length;i++){
+                            var u=data[i]
+                            console.log("电话:"+u.uphone)
+                            console.log("邮箱:"+u.uemail)
+                        }
+                    }
+                })
+
+            })
+
+        })
+    </script>
+</head>
+<body>
+<button id="btnAjax">显示</button>
+</body>
+</html>

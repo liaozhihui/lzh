@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        /**
+         * showMsg()是为了处理/13/server相应的users的数据的
+         * @param data 查询出来users的信息
+         * 注意：该方法是由13-server响应时调用的
+         */
+        function showMsg(data) {
+            for(var i=0;i<data.length;i++){
+                console.log("id:"+data[i].id)
+            console.log('uname:'+data[i].uname)
+            }
+
+        }
+        $(function () {
+            $('#btnShow').click(function () {
+                //创建script标签
+                var script=document.createElement('script')
+                //为script标签的src和type属性
+                script.type='text/javascript'
+                script.src='http://127.0.0.1:5000/13-server?callback=showMsg'
+                //将script标签加载到当前的网页上
+                var body=$("body")[0]
+                body.append(script)
+            })
+        })
+    </script>
+</head>
+<body>
+    <button id="btnShow">显示USer</button>
+</body>
+</html>

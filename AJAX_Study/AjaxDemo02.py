@@ -189,6 +189,64 @@ def homework09():
 
         return "0"
 
+@app.route("/09-searh")
+def search_views():
+    return render_template("09-search.html")
+
+@app.route("/09-server")
+def server_views():
+    kw=request.args['kw']
+    users=User.query.filter(User.uemail.like("%"+kw+"%")).all()
+    list = []
+    for u in users:
+        list.append(u.to_dict())
+    return json.dumps(list)
+@app.route('/10-ajax')
+def ajax_views():
+    return render_template("10-ajax.html")
+
+@app.route('/10-server')
+def server10():
+    users=User.query.all()
+    list=[u.to_dict() for u in users]
+    return json.dumps(list)
+
+@app.route('/12-cd')
+def cd_views():
+    return render_template("13-cd.html")
+
+@app.route('/13-server')
+def server13():
+    #接收前端传递过来的callback的参数，表示的是前端处理响应的函数名称
+    cd = request.args['callback']
+    #查询所有的user的信息
+    users=User.query.all()
+    #响应
+    list=[u.to_dict() for u in users]
+    jsonStr=json.dumps(list)
+    print(type(jsonStr))
+    print(jsonStr)
+    return cd+"("+jsonStr+")"
+
+@app.route('/14-cd-exer')
+def cd_exer():
+    return render_template("14-cd-exer.html")
+
+@app.route("/14-server")
+def server14():
+    #接收前段传递过来的参宿callback
+    cd = request.args['callback']
+    #准备响应数据,并转换成JSON格式的字符串
+    dic={
+        "flightNo":"CA789",
+        "from":"beijing",
+        "to":"Shanghai",
+        "time":"15:55"
+    }
+    #结合callback 以及响应数据给出响应
+    jsonStr=json.dumps(dic)
+    print(type(jsonStr),jsonStr)
+    return cd+"("+jsonStr+")"
 
 if __name__ == '__main__':
     manager.run()
