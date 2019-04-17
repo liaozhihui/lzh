@@ -20,12 +20,27 @@
 
 
             })
+            $("#btnJQ").click(function () {
+                $.ajax({
+                    url:"http://127.0.0.1:5000/14-server",
+                    type:"get",
+                    dataType:"jsonp",
+                    success:function(data){
+//                        console.log(data)
+//                        console.log(data.flightNo)
+//                        console.log(data.from)
+//                        console.log(data.to)
+//                        console.log(data.time)
+                    }
+                })
+            })
 
         })
     </script>
 </head>
 <body>
     <button id="btnShow">显示</button>
+    <button id="btnJQ">显示(JQ)</button>
     <div>
         <p>航班号:<span id="flightNo"></span></p>
         <p>出发：<span id="from"></span></p>

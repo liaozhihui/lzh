@@ -243,10 +243,12 @@ def server14():
         "to":"Shanghai",
         "time":"15:55"
     }
+    print(cd)
     #结合callback 以及响应数据给出响应
     jsonStr=json.dumps(dic)
     print(type(jsonStr),jsonStr)
     return cd+"("+jsonStr+")"
+    # return jsonStr
 
 if __name__ == '__main__':
     manager.run()
