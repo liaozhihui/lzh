@@ -12,3 +12,6 @@ def clean_cn_corpus(file_name,clean_level='all',simple_only=True,is_save=True):
     else:
         print("没有该文件")
     save_file=os.path.join(base_dir)
+
+    with open(file_name,"r+",encoding='utf-8') as f:
+        clean_countent=[]
