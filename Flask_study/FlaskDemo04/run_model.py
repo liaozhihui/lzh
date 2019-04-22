@@ -39,6 +39,12 @@ class Users(db.Model):
     def __repr__(self):
         return "<User:%r>"%self.username
 
+class Wife(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    wname=db.Column(db.String(30))
+    #增加外检约束和唯一约束
+    uid=db.Column(db.Integer,db.ForeignKey('users.id'),unique=True)
+
 class Student(db.Model):
     __tablename__="student"
     id=db.Column(db.Integer,primary_key=True,autoincrement=True)
@@ -64,11 +70,7 @@ class Student_teacher(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"))
 
 
-class Wife(db.Model):
-    id=db.Column(db.Integer,primary_key=True)
-    wname=db.Column(db.String(30))
-    #增加外检约束和唯一约束
-    uid=db.Column(db.Integer,db.ForeignKey('users.id'),unique=True)
+
 
 class Course(db.Model):
     __tablename__="course"
