@@ -7,9 +7,11 @@ n_steps=2
 n_inputs=3
 n_hidden=5
 X=tf.placeholder(tf.float32,shape=[None,n_steps,n_inputs])
-basic_cell = tf.contrib.rnn.BasicRNNCell(n_hidden)
+# basic_cell =
+cells=[tf.contrib.rnn.BasicLSTMCell(n_hidden,state_is_tuple=True) for basic_cell in range(2)]
+cells=tf.contrib.rnn.MultiRNNCell(cells)
 seq_length=tf.placeholder(tf.int32,[None])
-outputs,states = tf.nn.dynamic_rnn(basic_cell,X,\
+outputs,states = tf.nn.dynamic_rnn(cells,X,\
                                    dtype=tf.float32, \
                                    sequence_length=seq_length)
 init = tf.global_variables_initializer()
@@ -26,5 +28,5 @@ with tf.Session() as sess:
     init.run()
     outputs_val, states_val = sess.run(
         [outputs, states], feed_dict={X: X_batch, seq_length: seq_length_batch})
-    print("outputs_val.shape:", outputs_val.shape, "states_val.shape:", states_val.shape)
+    print("outputs_val.shape:", outputs_val.shape, "states_val[0][1].shape:", states_val[0][1].shape)
     print("outputs_val:", outputs_val, "states_val:", states_val)

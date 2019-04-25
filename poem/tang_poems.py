@@ -4,15 +4,17 @@ import os
 import sys
 import numpy as np
 import tensorflow as tf
-from .model import rnn_model
-from .poems import process_poems,generate_batch
+from model import rnn_model
+
+from poems import process_poems,generate_batch
+
 import heapq
 
-tf.app.flags.DEFINE_integer('batch_szie',64,'batch size')
-tf.app.flags.DEFINE_float("learning_rate",0.01,'learning rate')
+tf.app.flags.DEFINE_integer('batch_size',64,'batch size.')
+tf.app.flags.DEFINE_float("learning_rate",0.01,'learning rate.')
 
 tf.app.flags.DEFINE_string("checkpoints_dir",os.path.abspath('./checkpoints'),'checkpoints save path.')
-tf.app.flags.DEFINE_string("file_path",os.path.abspath('./data/poems.txt'),'file name of poems')
+tf.app.flags.DEFINE_string("file_path",os.path.abspath('./data/poetry.txt'),'file name of poems')
 
 tf.app.flags.DEFINE_string("model_prefix",'poem','model save prefix')
 tf.app.flags.DEFINE_integer("epoches",50,"train how many epochs")
@@ -23,7 +25,11 @@ start_token="G"
 end_token="E"
 
 def run_training():
-    if not os .path.exists(os.path.dirname(FLAGS.checkpoints_dir)):
+    print(FLAGS.batch_size)
+    print(FLAGS.checkpoints_dir)
+    print(os.path.dirname(FLAGS.checkpoints_dir))
+    print(FLAGS.file_path)
+    if not os.path.exists(os.path.dirname(FLAGS.checkpoints_dir)):
         os.mkdir(os.path.dirname(FLAGS.checkpoints_dir))
 
     if not os.path.exists(FLAGS.checkpoints_dir):
@@ -39,7 +45,7 @@ def run_training():
                          output_data=output_targets,vocab_size=len(vocabularies),\
                          rnn_size=128,num_layers=2,batch_size=64,learning_rate=FLAGS.learning_rate)
 
-    saver=tf.train.Saver(tf.global_variables)
+    saver=tf.train.Saver(tf.global_variables())
     init_op=tf.group(tf.global_variables_initializer(),tf.local_variables_initializer())
     with tf.Session() as sess:
         sess.run(init_op)
@@ -112,20 +118,20 @@ def gen_poem(begin_word):
 
         return poem
 
-    def pretty_print_poem(poem):
-        poem_sentences=poem.split("。")
-        for s in poem_sentences:
-            if s !='' and len(s)>10:
-                print(s+"。")
+def pretty_print_poem(poem):
+    poem_sentences=poem.split("。")
+    for s in poem_sentences:
+        if s !='' and len(s)>10:
+            print(s+"。")
 
-    def main(is_train):
-        if is_train:
-            print("[INFO]train tang poem")
-            run_training()
-        else:
-            print("[INFO]write tang poem")
-            begin_word=input("开始作诗,请输入起始字.")
-            poem2=gen_poem(begin_word)
-            pretty_print_poem(poem2)
+def main(is_train):
+    if is_train:
+        print("[INFO]train tang poem")
+        run_training()
+    else:
+        print("[INFO]write tang poem")
+        begin_word=input("开始作诗,请输入起始字.")
+        poem2=gen_poem(begin_word)
+        pretty_print_poem(poem2)
 if __name__=="__main__":
     tf.app.run()

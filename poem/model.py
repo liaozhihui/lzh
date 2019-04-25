@@ -26,20 +26,20 @@ def rnn_model(model,input_data,output_data,vocab_size,\
         initial_state = cell.zero_state(1, dtype=tf.float32)
 
     with tf.device("/cpu:0"):
-        embeding= tf.get_variable('embeding',initializer=tf.random.uniform([vocab_size+1,rnn_size],-1.0,1.0))
+        embeding= tf.get_variable('embeding',initializer=tf.random_uniform([vocab_size+1,rnn_size],-1.0,1.0))
         inputs = tf.nn.embedding_lookup(embeding,input_data) #128
 
     outputs,last_state=tf.nn.dynamic_rnn(cell,inputs,initial_state = initial_state)
 
     output=tf.reshape(outputs,[-1,rnn_size])
 
-    weights=tf.Variable(tf.truncated_normal(rnn_size,vocab_size+1))
+    weights=tf.Variable(tf.truncated_normal([rnn_size,vocab_size+1]))
     bias = tf.Variable(tf.zeros(shape=[vocab_size+1]))
     logits = tf.nn.bias_add(tf.matmul(output,weights),bias=bias)
 
     if output_data is not None:
         labels = tf.one_hot(tf.reshape(output_data,[-1]),depth=vocab_size+1)
-        loss=tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels,logits=logits)
+        loss=tf.nn.softmax_cross_entropy_with_logits(labels=labels,logits=logits)
 
         total_loss = tf.reduce_mean(loss)
         train_op=tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(total_loss)

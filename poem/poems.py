@@ -27,11 +27,11 @@ def process_poems(file_name):
 
                 pass
     #按诗的字数排序
-    print(poems)
+
     poems = sorted(poems,key = lambda line:len(line))
     all_words = []
     for poem in poems:
-        all_words+=poem
+        all_words+=[word for word in poem]
     counter = collections.Counter(all_words)
     count_pairs = sorted(counter.items(),key=lambda x:-x[-1])
     words,_=zip(*count_pairs)
@@ -40,8 +40,6 @@ def process_poems(file_name):
 
     words_int_map=dict(zip(words,range(len(words))))
     poems_vector = [list(map(lambda word:words_int_map.get(word,len(words)),poem))for poem in poems]
-    print(poems_vector[1])
-    print(np.array(poems_vector).shape)
     return poems_vector,words_int_map,words
 
 def generate_batch(batch_size,poems_vec,word_to_int):
@@ -55,7 +53,7 @@ def generate_batch(batch_size,poems_vec,word_to_int):
         batches=poems_vec[start_index:end_index]
         #找到最长的长度
         length=max(map(len,batches))
-        x_data=np.full((batch_size,length),word_to_int[''],np.int32)
+        x_data=np.full((batch_size,length),word_to_int[' '],np.int32)
 
         for row in range(batch_size):
             x_data[row,:len(batches[row])]=batches[row]
@@ -66,4 +64,4 @@ def generate_batch(batch_size,poems_vec,word_to_int):
     return x_batches,y_batches
     pass
 
-process_poems("./data/poetry.txt")
+
