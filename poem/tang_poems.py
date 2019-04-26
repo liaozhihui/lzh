@@ -25,10 +25,7 @@ start_token="G"
 end_token="E"
 
 def run_training():
-    print(FLAGS.batch_size)
-    print(FLAGS.checkpoints_dir)
-    print(os.path.dirname(FLAGS.checkpoints_dir))
-    print(FLAGS.file_path)
+
     if not os.path.exists(os.path.dirname(FLAGS.checkpoints_dir)):
         os.mkdir(os.path.dirname(FLAGS.checkpoints_dir))
 
@@ -58,7 +55,7 @@ def run_training():
         print("[INFO] start trianing...")
 
         try:
-            for epoch in range(start_epoch,FLAGS.batch_size):
+            for epoch in range(start_epoch,FLAGS.epoches):
                 n=0
                 n_chunk = len(poems_vector)//FLAGS.batch_size
                 for batch in range(n_chunk):
@@ -78,7 +75,7 @@ def to_word(predict,vocabs):
     s =np.sum(predict)
     sample = int(np.searchsorted(t,np.random.rand(1)*s))
     if sample >len(vocabs):
-        sample = len(vocabs)
+        sample = len(vocabs)-1
     return vocabs[sample]
 
 

@@ -53,7 +53,7 @@ def generate_batch(batch_size,poems_vec,word_to_int):
         batches=poems_vec[start_index:end_index]
         #找到最长的长度
         length=max(map(len,batches))
-        x_data=np.full((batch_size,length),word_to_int[' '],np.int32)
+        x_data=np.full((batch_size,length),word_to_int[''],np.int32)
 
         for row in range(batch_size):
             x_data[row,:len(batches[row])]=batches[row]
