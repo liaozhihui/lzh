@@ -8,7 +8,7 @@ Created on Thu Apr 11 15:20:20 2019
 import urllib.request
 url='http://www.baidu.com/'
 response=urllib.request.urlopen(url)
-print(response)
-
+#获取响应对象
+#read得到的是一个bytes数据类型
 html = response.read().decode('utf-8')
 print(html)
