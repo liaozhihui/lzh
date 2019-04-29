@@ -1,6 +1,7 @@
 # coding=utf-8
 from urllib import request,parse
 import re
+import csv
 class CatEyeSpider(object):
 
     def __init__(self,baseurl,user_agent):
@@ -27,10 +28,12 @@ class CatEyeSpider(object):
         return p_list
 
     def write_page(self,p_list,filename):
-        with open(filename,"w",encoding="utf-8") as f:
-            for num,p in enumerate(p_list):
-                line="top{} 电影名称:{} {} {}\n".format(num+1,p[0].strip(),p[1].strip(),p[2].strip())
-                f.write(line)
+        with open(filename,"a",encoding="utf-8") as f:
+            writer=csv.writer(f)
+            for rt in p_list:
+                film=[rt[0].strip(),rt[1].strip(),rt[2].strip()]
+                writer.writerow(film)
+
 
 
 
@@ -41,7 +44,7 @@ class CatEyeSpider(object):
             html=self.get_page(key)
             result=self.parse_page(html)
             p_list+=result
-        self.write_page(p_list,"猫眼top100.txt")
+        self.write_page(p_list,"猫眼top100.csv")
 
 
 
