@@ -33,7 +33,11 @@ py=[1,0]
 
 mp.scatter(px,py,s=100,marker='o',edgecolors='steelblue',facecolor='deepskyblue',zorder=3)
 
-mp.annotate(r'$[\frac{\pi}{2},1]$',)
+mp.annotate(r'$[\frac{\pi}{2},1]$',xycoords='data',
+            xy=(np.pi/2,1),textcoords='offset points',xytext=(30,10),
+            fontsize=12,arrowprops=dict(arrowstyle='->',connectionstyle='angle3'))
 
-
+mp.annotate(r'$[\frac{\pi}{2},0]$',xycoords='data',
+            xy=(np.pi/2,0),textcoords='offset points',xytext=(-60,-40),
+            fontsize=12,arrowprops=dict(arrowstyle='->',connectionstyle='angle3'))
 mp.show()
