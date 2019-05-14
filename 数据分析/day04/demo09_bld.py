@@ -1,5 +1,5 @@
 """
-demo12_loadtxt.py 加载文件
+布林带
 """
 import numpy as np
 import matplotlib.pyplot as mp
@@ -21,8 +21,7 @@ dates, opening_prices, highest_prices, \
 		dtype='M8[D], f8, f8, f8, f8',
 		delimiter=',',
 		converters={1:dmy2ymd})
-
-print(dates,type(dates[0]))
+dates =dates.astype(md.datetime.datetime)
 
 #绘制收盘价的折线图
 
@@ -43,9 +42,29 @@ ax.xaxis.set_major_formatter(
 minor_loc=md.DayLocator()
 ax.xaxis.set_minor_locator(minor_loc)
 
-mp.plot(list(dates), closing_prices,
+mp.plot(dates, closing_prices,
 	c='dodgerblue', linestyle='--',
-	linewidth=3, label='AAPL')
+	linewidth=3, label='closing_prices',alpha=0.8)
+
+
+#实现加权5日均线
+#从y=e^x,取得5个函数值作为卷积核
+
+weights = np.exp(np.linspace(-1,0,5))
+ema5 = np.convolve(closing_prices,weights[::-1]/weights.sum(),"valid")
+mp.plot(dates[4:],ema5,color="red",label='EMA',linewidth=2,alpha=0.5)
+
+#绘制布林带
+stds = np.zeros(ema5.size)
+for i in range(stds.size):
+	stds[i] = closing_prices[i:i+5].std()
+
+#计算上轨和下轨
+uppers = ema5+2*stds
+lowers = ema5-2*stds
+mp.plot(dates[4:],uppers,color="red",label='Uppers',linewidth=2,alpha=0.5)
+mp.plot(dates[4:],lowers,color="red",label='Lowers',linewidth=2,alpha=0.5)
+mp.fill_between(dates[4:],uppers,lowers,uppers>lowers,color='red',alpha=0.3)
 mp.legend()
 mp.gcf().autofmt_xdate()
 mp.show()

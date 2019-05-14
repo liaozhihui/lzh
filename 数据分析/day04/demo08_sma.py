@@ -1,5 +1,5 @@
 """
-demo12_loadtxt.py 加载文件
+绘制移动平均线
 """
 import numpy as np
 import matplotlib.pyplot as mp
@@ -45,7 +45,35 @@ ax.xaxis.set_minor_locator(minor_loc)
 
 mp.plot(list(dates), closing_prices,
 	c='dodgerblue', linestyle='--',
-	linewidth=3, label='AAPL')
+	linewidth=3, label='closing_prices',alpha=0.8)
+#计算5日均线
+sma5 = np.zeros(closing_prices.size - 4)
+
+for i in range(sma5.size):
+	sma5[i] = closing_prices[i:i+5].mean()
+
+mp.plot(dates[4:],sma5,color='orangered',label='SMA-5',linewidth=1)
+
+#基于卷积实现5日均线
+
+core=np.ones(5)/5
+
+sma52=np.convolve(closing_prices,core,"valid")
+mp.plot(dates[4:],sma52,color='orangered',label='SMA-5',linewidth=7,alpha=0.3)
+
+#使用卷积绘制10日均线
+core = np.ones(10)/10
+sma10 = np.convolve(closing_prices,core,'valid')
+mp.plot(dates[9:],sma10,color='limegreen',label='SMA-10',linewidth=3)
+
+#实现加权5日均线
+#从y=e^x,取得5个函数值作为卷积核
+
+weights = np.exp(np.linspace(-1,0,5))
+ema5 = np.convolve(closing_prices,weights[::-1]/weights.sum(),"valid")
+mp.plot(dates[4:],ema5,color="violet",label='EMA%',linewidth=2)
+
+
 mp.legend()
 mp.gcf().autofmt_xdate()
 mp.show()

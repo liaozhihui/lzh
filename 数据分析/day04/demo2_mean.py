@@ -1,6 +1,4 @@
-"""
-demo12_loadtxt.py 加载文件
-"""
+
 import numpy as np
 import matplotlib.pyplot as mp
 import datetime as dt
@@ -14,15 +12,14 @@ def dmy2ymd(dmy):
 	return s
 
 dates, opening_prices, highest_prices, \
-	lowest_prices, closing_prices = \
+	lowest_prices, closing_prices,volumns = \
 	np.loadtxt('../da_data/aapl.csv',
-		usecols=(1,3,4,5,6),
+		usecols=(1,3,4,5,6,7),
 		unpack=True,
-		dtype='M8[D], f8, f8, f8, f8',
+		dtype='M8[D], f8, f8, f8, f8,f8',
 		delimiter=',',
 		converters={1:dmy2ymd})
 
-print(dates,type(dates[0]))
 
 #绘制收盘价的折线图
 
@@ -43,9 +40,20 @@ ax.xaxis.set_major_formatter(
 minor_loc=md.DayLocator()
 ax.xaxis.set_minor_locator(minor_loc)
 
-mp.plot(list(dates), closing_prices,
+dates = dates.astype(md.datetime.datetime)
+mp.plot(dates, closing_prices,
 	c='dodgerblue', linestyle='--',
-	linewidth=3, label='AAPL')
-mp.legend()
+	linewidth=3, label='closing_price',alpha=0.3)
+#计算均值
+mean = np.mean(closing_prices)
+mp.hlines(mean,dates[0],dates[-1],color='orangered',label='Mean(Closing)')
+#成交量加权平均线
+vwap = np.average(closing_prices,weights=volumns)
+mp.hlines(vwap,dates[0],dates[-1],colors='limegreen',label='VWAP')
+#时间加权平均线
+times = np.arange(1,closing_prices.size+1)
+twap = np.average(closing_prices,weights=times)
+mp.hlines(twap,dates[0],dates[-1],color='violet',label='TWAP')
+mp.legend(loc=0)
 mp.gcf().autofmt_xdate()
 mp.show()
