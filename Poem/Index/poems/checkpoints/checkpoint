@@ -1,0 +1,4 @@
+model_checkpoint_path: "E:\\Users\\MSI-NBOOK\\PycharmProject\\Demo1\\TensorFlow-Poems-master\\checkpoints\\poems-48"
+all_model_checkpoint_paths: "E:\\Users\\MSI-NBOOK\\PycharmProject\\Demo1\\TensorFlow-Poems-master\\checkpoints\\poems-36"
+all_model_checkpoint_paths: "E:\\Users\\MSI-NBOOK\\PycharmProject\\Demo1\\TensorFlow-Poems-master\\checkpoints\\poems-42"
+all_model_checkpoint_paths: "E:\\Users\\MSI-NBOOK\\PycharmProject\\Demo1\\TensorFlow-Poems-master\\checkpoints\\poems-48"

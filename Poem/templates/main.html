@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自动写诗</title>
+    <style>
+        #content{
+            width: 500px;
+            height:500px;
+            border: 2px solid black;
+        }
+    </style>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+
+    <script>
+        $(function () {
+            $("#confirm").click(function () {
+
+                var word= $("#word").val()
+
+                $.ajax({
+                    url:"/index/show/",
+                    type:"get",
+                    data:"word="+word,
+                    dataType:"json",
+                    success:function (data) {
+
+                        $("#content").text(data.word)
+
+                    }
+
+                })
+            })
+        })
+    </script>
+
+</head>
+<body>
+    <p><input type="text" placeholder="请输入第一个字" id="word"></p>
+    <div id="content">
+
+    </div>
+    <input type="button" value="确定" id="confirm">
+</body>
+</html>

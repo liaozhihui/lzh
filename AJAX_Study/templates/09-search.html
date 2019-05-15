@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .container{
+            position:relative;
+        }
+        .content{
+            border:1px solid #000;
+            padding:15px;
+            background-color:#fff;
+            width:300px;
+            position:absolute;
+            top:33px;
+            left:74px;
+            display:none;
+        }
+    </style>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+            $("#kw").keyup(function () {
+                if(this.value==""){
+                   $('.content').html("");
+                    $('.content').css("display","none")
+                }else{
+                    var params="kw="+this.value
+                    $.get("09-server",params,function(data){
+                        if (data.length>0){
+                            $('.content').css("display","block")
+                            var html=""
+                            for(var i=0;i<data.length;i++){
+                                html+="<p>"+data[i].uemail+"</p>"
+                            }
+                            $('.content').html(html);
+                        }else{
+                            $('.content').html("");
+                             $('.content').css("display","none")
+                        }
+                    },"json")
+                }
+
+            })
+            
+        })
+    </script>
+</head>
+<body>
+    <div class="container">
+        <p>
+            电子邮件:<input type="text" id="kw">
+        </p>
+        <div class="content">
+
+        </div>
+    </div>
+</body>
+</html>

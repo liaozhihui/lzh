@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="btnAjax">请求数据</button>
+<table width="500" border="1">
+    <tr>
+        <th>姓名</th>
+         <th>号码</th>
+         <th>邮件</th>
+    </tr>
+    <tbody id="body"></tbody>
+</table>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/jquery-1.11.3.js"></script>
+<script>
+    $(function () {
+        $("#btnAjax").click(function () {
+            //创建xhr
+            var xhr = createXhr();
+            //创建请求
+            xhr.open('get','05-json',true);
+            //设置回调函数
+            xhr.onreadystatechange=function () {
+                if(xhr.readyState==4 && xhr.status==200){
+                    var resText=xhr.responseText
+                    var arr=JSON.parse(resText);
+//                    console.log(arr)
+//                    console.log("arr的数据类型",typeof(arr))
+                    var html = "";
+                    for(var i=0;i<arr.length;i++){
+                        html +="<tr>"
+                        html+="<td>"+arr[i].uname+"</td>"
+                         html+="<td>"+arr[i].uphone+"</td>"
+                         html+="<td>"+arr[i].uemail+"</td>"
+                        html+="</tr>"
+                    }
+                    $("#body").html(html);
+                }
+            }
+            //发送请求
+            xhr.send(null);
+        })
+    })
+</script>
+</body>
+</html>

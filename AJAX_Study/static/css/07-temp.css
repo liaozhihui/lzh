@@ -1,0 +1,14 @@
+#container .title{
+    color:#f00;
+    font_size:24px;
+    font_weight:bold;
+}
+
+#container ul li{
+    float: left;
+    width: 100px;
+    height: 30px;
+    text_align:center;
+    line-height:30px;
+    margin-right:5px;
+}

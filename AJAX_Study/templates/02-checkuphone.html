@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        function checkPhone() {
+            //创建xhr
+            var xhr=createXhr();
+            //创建请求
+            xhr.open('get','02-server?uphone='+$('#uphone').val(),true)
+            //设置回调函数
+            xhr.onreadystatechange=function () {
+                if(xhr.readyState==4 && xhr.status==200){
+                    $('#uphone-show').html(xhr.responseText)
+                }
+
+            }
+            //发送请求
+            xhr.send(null)
+        }
+    </script>
+</head>
+<body>
+    电话号码：<input type="text" id="uphone" onblur="checkPhone()">
+<span id="uphone-show"></span>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+            $("#btnLoad").click(function () {
+//                var params = 'uname=maria&uage=30'
+                var params={
+                    uname:'LzMaria',
+                    uage:30
+                }
+                //使用字符串传参的话,load()方式使用的是get请求
+                //使用key:value(js对象)的方式传参的话，load()使用的是post请求方式
+                $('#showTemp').load("/07-temps",params,function () {
+                    window.setTimeout(function () {
+                        $("#showTemp").slideUp(5000);
+                    },5000)
+
+                })
+            })
+
+        })
+    </script>
+    <link rel="stylesheet" href="/static/css/07-temp.css">
+</head>
+<body>
+    <button id="btnLoad">加载/07-temp到网页中</button>
+    <div id="showTemp">
+
+    </div>
+</body>
+</html>

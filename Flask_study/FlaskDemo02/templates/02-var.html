@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>变量类型</title>
+</head>
+<body>
+<h1>标签</h1>
+<!--如果age小于18岁少年，如果是大于18输出成年-->
+<p style="color:red;background:orchid">
+{%if params.age<18%}
+少年
+{%elif params.age>=18 and  params.age<50%}
+中年
+{%else%}
+老年
+{%endif%}
+</p>
+<div>
+    {%for n in params.list%}
+        <p
+        {%if loop.first%}
+        style="background: red"
+        {%elif loop.last%}
+        style="background: yellow"
+        {%else%}
+        style="background: deeppink"
+        {%endif%}
+        >{{n}}</p>
+
+    {%endfor%}
+
+</div>
+<h1>过滤器</h1>
+<p>age|abs:{{params.age|abs}}</p>
+<p>params.person|attr('name'):{{params.person|attr('name')}}</p>
+<h1>变量</h1>
+<p>name{{params.name|truncate(4)|trim}}</p>
+<p>age{{params.age}}</p>
+<p>list{{params.list}}</p>
+<p>list[0]{{params.list[0]}}</p>
+<p>list.1{{params.list.1}}</p>
+<p>tup{{params.tup}}</p>
+<p>dic{{params.dic}}</p>
+<p>person{{params.person}}</p>
+<p>person.name{{params.person.name}}</p>
+<p>person.hobby(){{params.person.hobby()}}</p>
+
+
+
+
+
+</body>
+</html>
