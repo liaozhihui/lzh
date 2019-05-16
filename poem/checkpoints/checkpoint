@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/csdn/AID/lzh/poem/checkpoints/poem-0"
+all_model_checkpoint_paths: "/home/csdn/AID/lzh/poem/checkpoints/poem-0"
