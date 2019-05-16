@@ -3,15 +3,19 @@ class Singon(object):
 
 
 
-    def a(cls,a):
-        if not hasattr(a,'isinstance'):
+    def __new__(cls):
 
-            a.instance=super(Singon,a).__new__(a)
-        return a.instance
+        print(object.__new__(cls))
 
+        if not hasattr(cls,'instance'):
+
+            cls.instance=object.__new__(cls)
+
+        return cls.instance
     def __init__(self):
-        pass
-
+       pass
 a=Singon()
 b=Singon()
-a.a(Singon)
+a.attr1="values"
+print(a.attr1,b.attr1)
+print(a==b)
