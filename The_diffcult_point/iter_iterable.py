@@ -13,14 +13,9 @@ class Myrange(object):
 
     def __iter__(self):
         print("=")
-        return genetor()
-        # return IteratorRange(self.start,self.end,self.step)
+        # return genetor()
+        return IteratorRange(self.start,self.end,self.step)
 
-def genetor():
-    yield 1
-    yield 2
-    yield 3
-    yield 4
 
 class IteratorRange(object):
     def __init__(self,start,end,step=1):
