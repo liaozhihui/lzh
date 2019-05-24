@@ -1,0 +1,51 @@
+# coding=utf-8
+import numpy as np
+import sklearn.cluster as sc
+import matplotlib.pyplot as mp
+import sklearn.metrics as sm
+
+
+
+
+x = np.loadtxt("../ml_data/multiple3.txt",delimiter=",")
+model=sc.KMeans(n_clusters=4)
+model.fit(x)
+pred_y = model.predict(x)
+
+score=sm.silhouette_score(x,pred_y,sample_size=len(x),metric='euclidean')
+print(score)
+
+#获取聚类中心
+centers=model.cluster_centers_
+print(centers)
+n=500
+l,r=x[:,0].min()-1,x[:,0].max()+1
+t,d=x[:,1].min()-1,x[:,1].max()+1
+
+grid_x,grid_y=np.meshgrid(np.linspace(l,r,n),np.linspace(t,d,n))
+
+
+grid_xy=np.column_stack((grid_x.ravel(),grid_y.ravel()))
+
+
+
+grid_z=model.predict(grid_xy)
+
+
+# grid_z=np.vstack((grid_x.flatten(),grid_y.flatten()))
+#
+# grid_z=model.predict(grid_z.T)
+
+grid_z=grid_z.reshape(grid_x.shape)
+
+mp.figure("Kmeans",facecolor="lightgray")
+mp.title("Kmeans",fontsize=14)
+mp.xlabel("x",fontsize=12)
+mp.ylabel("y",fontsize=12)
+mp.tick_params(labelsize=10)
+mp.grid(linestyle=":")
+mp.pcolormesh(grid_x,grid_y,grid_z,cmap="gray")
+mp.scatter(x[:,0],x[:,1],s=60,marker='o',c=pred_y,cmap="brg",label="Sample Points")
+mp.scatter(centers[:,0],centers[:,1],s=120,marker='+',c='red',label="Centers")
+mp.legend()
+mp.show()
