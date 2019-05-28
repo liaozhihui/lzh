@@ -1,0 +1,6 @@
+model_checkpoint_path: "best-612"
+all_model_checkpoint_paths: "best-147"
+all_model_checkpoint_paths: "best-189"
+all_model_checkpoint_paths: "best-558"
+all_model_checkpoint_paths: "best-577"
+all_model_checkpoint_paths: "best-612"

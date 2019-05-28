@@ -62,7 +62,7 @@ cur=tf.reduce_mean(tf.cast(tf.equal(output,output_y),tf.float32))
 # m6=tf.placeholder(dtype=tf.float32,shape=[1],name='m6')
 # m7=m5+m6
 
-session = tf.Session()
+# session = tf.Session()
 with tf.Session() as session:
     session.run(tf.global_variables_initializer())
     for i in range(2001):

@@ -35,4 +35,4 @@ def plt_data(imgs,cls,pred=None):
         ax.set_yticks([])
     plt.show()
 
-plt_data(mnist.train.images[:9],mnist.train.cls[:9])
+# plt_data(mnist.train.images[:9],mnist.train.cls[:9])
