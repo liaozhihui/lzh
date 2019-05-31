@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# import tensorflow as tf
+import tensorflow as tf
 import numpy as np
 import math
 import collections

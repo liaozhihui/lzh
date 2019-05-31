@@ -23,6 +23,14 @@ db = SQLAlchemy(app)
 #将app交给manager进行管理，以后由manager来启动程序
 manager=Manager(app)
 
+'''
+create table student(id int not null AUTO_INCREMENT primary key, 
+name varchar(20) not null unique, 
+age int)default charset=utf8;
+
+insert into student (name,age) values ('小明',12) on duplicate key update name=values(name),age=values(age);
+
+'''
 #创建实体类-Users,映射到数据库中users表
 #id,主键,自增
 #username,长度为80的字符串，不允许为空，唯一，加索引
